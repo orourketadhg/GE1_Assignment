@@ -1,10 +1,13 @@
 # GE1_Assignment 
 
+# Student Details
 Tadhg O'Rourke - C17403574 - DT228/TU856 
 
 # Description 
+The following project outlines a procedurally animated creature walking over a infinite winding path. 
 
-
+The path will generate following a Bizier curve to construct the ground.
+I plan to use Unity3D's new Input System to control the camera, the colors, and the creatures speed. 
 
 # References 
 
