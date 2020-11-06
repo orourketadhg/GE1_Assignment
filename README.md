@@ -1,15 +1,12 @@
 # GE1_Assignment 
 
-# Student Details
+## Student Details
 Tadhg O'Rourke - C17403574 - DT228/TU856 
 
-# Description 
-The following project outlines a procedurally animated creature walking over a infinite winding path. 
+## Description 
+The following project outlines a procedurally animated creature walking over a infinite winding path. The path will generate using a Bizier curve to construct the ground the creature will follow. I plan to use Unity3D's new Input System to control the camera, the colors, and the creatures speed. 
 
-The path will generate following a Bizier curve to construct the ground.
-I plan to use Unity3D's new Input System to control the camera, the colors, and the creatures speed. 
-
-# References 
+## References 
 
 [![Unity PROCEDURAL ANIMATION tutorial (10 steps)](http://i3.ytimg.com/vi/e6Gjhr1IP6w/hqdefault.jpg)](https://www.youtube.com/watch?v=e6Gjhr1IP6w&ab_channel=Codeer)
 
