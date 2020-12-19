@@ -10,9 +10,15 @@ namespace com.GE1Assignment.Kinematics {
     public class InverseKinematic : MonoBehaviour {
 
         
-        public int numBones = 2;
+        public int numBones = 3;
         
         public Transform target;
+        public Transform pole;
+
+        [Header("Settings")] 
+        public int iterations = 10;
+        public float threshold = 0.001f;
+        
 
         private float[] _bonesLengths;
         private float _totalLength;
@@ -65,9 +71,8 @@ namespace com.GE1Assignment.Kinematics {
             if (_bonesLengths.Length != numBones) {
                 Init();
             }
-            
-            // Fabric
-            
+
+            // get joint positions
             for (int i = 0; i < _bones.Length; i++) {
                 _positions[i] = _bones[i].position;
             }
@@ -83,7 +88,38 @@ namespace com.GE1Assignment.Kinematics {
                 }
                 
             }
+            else {
+                for (int i = 0; i < iterations; i++) {
 
+                    // back
+                    for (int j = numBones; j > 0; j--) {
+                        
+                        if (j == numBones) {
+                            _positions[j] = target.position;
+                        }
+                        else {
+                            _positions[j] = _positions[j + 1] + ( _positions[j] - _positions[j + 1] ).normalized * _bonesLengths[j];
+                            
+                        }
+                        
+                    }
+                    
+                    // forward
+                    for (int j = 1; j < numBones; j++) {
+                        _positions[j] = _positions[j - 1] + ( _positions[j] - _positions[j - 1] ).normalized * _bonesLengths[j - 1];
+                    }
+
+                    if (( _positions[numBones] - target.position ).sqrMagnitude < threshold * threshold) {
+                        break;    
+                    }
+                    
+                }
+                
+            }
+            
+            // move joints towards pole
+
+            // set joint positions
             for (int i = 0; i < _positions.Length; i++) {
                 _bones[i].position = _positions[i];
             }
