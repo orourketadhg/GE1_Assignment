@@ -9,21 +9,16 @@ namespace com.GE1Assignment.Kinematics {
      */
     public class InverseKinematic : MonoBehaviour {
 
-        
-        public int numBones = 3;
+        [Range(2, 4)]
+        public int numberOfJoints = 3;
         
         public Transform target;
         public Transform pole;
 
-        [Header("Settings")] 
-        public int iterations = 10;
-        public float threshold = 0.001f;
-        
-
-        private float[] _bonesLengths;
+        private float[] _jointLengths;
         private float _totalLength;
-        private Transform[] _bones;
-        private Vector3[] _positions;
+        private Transform[] _joints;
+        private Vector3[] _jointPositions;
         
         private void Awake() {
             Init();
@@ -37,21 +32,21 @@ namespace com.GE1Assignment.Kinematics {
          * Initialise bones and joints
          */
         private void Init() {
-            _bones = new Transform[numBones + 1];
-            _positions = new Vector3[numBones + 1];
-            _bonesLengths = new float[numBones];
+            _joints = new Transform[numberOfJoints + 1];
+            _jointPositions = new Vector3[numberOfJoints + 1];
+            _jointLengths = new float[numberOfJoints];
 
             _totalLength = 0;
 
             // record joints & the distances between them
             Transform currentBone = transform;
-            for (int i = numBones; i >= 0; i--) {
-                _bones[i] = currentBone;
+            for (int i = numberOfJoints; i >= 0; i--) {
+                _joints[i] = currentBone;
 
                 // check if i is the leaf joint (lowest child)
-                if (i != numBones) {
-                    _bonesLengths[i] = ( _bones[i + 1].position - currentBone.position ).magnitude;
-                    _totalLength += _bonesLengths[i];
+                if (i != numberOfJoints) {
+                    _jointLengths[i] = ( _joints[i + 1].position - currentBone.position ).magnitude;
+                    _totalLength += _jointLengths[i];
                 }
                 
                 currentBone = currentBone.parent;
@@ -64,68 +59,65 @@ namespace com.GE1Assignment.Kinematics {
          * Resolve the positions & rotations of the joints 
          */
         private void ResolveIK() {
-            if (target == null) {
-                return;
-            }
-
-            if (_bonesLengths.Length != numBones) {
-                Init();
-            }
-
             // get joint positions
-            for (int i = 0; i < _bones.Length; i++) {
-                _positions[i] = _bones[i].position;
+            for (int i = 0; i < _joints.Length; i++) {
+                _jointPositions[i] = _joints[i].position;
             }
             
             // check if target cannot be reached
-            if (( target.position - _bones[0].position ).sqrMagnitude >= _totalLength * _totalLength) {
+            if (( target.position - _joints[0].position ).sqrMagnitude >= _totalLength * _totalLength) {
                 // get direction to target
-                Vector3 directionToTarget = ( target.position - _positions[0] ).normalized;
+                Vector3 directionToTarget = ( target.position - _jointPositions[0] ).normalized;
 
                 // set joint positions at equal distances (within max range)
-                for (int i = 1; i < _positions.Length; i++) {
-                    _positions[i] = _positions[i - 1] + (directionToTarget * _bonesLengths[i - 1]);
+                for (int i = 1; i < _jointPositions.Length; i++) {
+                    _jointPositions[i] = _jointPositions[i - 1] + (directionToTarget * _jointLengths[i - 1]);
                 }
                 
             }
             else {
-                for (int i = 0; i < iterations; i++) {
-
-                    // back
-                    for (int j = numBones; j > 0; j--) {
-                        
-                        if (j == numBones) {
-                            _positions[j] = target.position;
-                        }
-                        else {
-                            _positions[j] = _positions[j + 1] + ( _positions[j] - _positions[j + 1] ).normalized * _bonesLengths[j];
-                            
-                        }
-                        
-                    }
+                
+                // back
+                for (int j = numberOfJoints; j > 0; j--) {
                     
-                    // forward
-                    for (int j = 1; j < numBones; j++) {
-                        _positions[j] = _positions[j - 1] + ( _positions[j] - _positions[j - 1] ).normalized * _bonesLengths[j - 1];
+                    if (j == numberOfJoints) {
+                        _jointPositions[j] = target.position;
                     }
-
-                    if (( _positions[numBones] - target.position ).sqrMagnitude < threshold * threshold) {
-                        break;    
+                    else {
+                        _jointPositions[j] = _jointPositions[j + 1] + ( _jointPositions[j] - _jointPositions[j + 1] ).normalized * _jointLengths[j];
+                        
                     }
                     
                 }
                 
+                // forward
+                for (int j = 1; j < numberOfJoints; j++) {
+                    _jointPositions[j] = _jointPositions[j - 1] + ( _jointPositions[j] - _jointPositions[j - 1] ).normalized * _jointLengths[j - 1];
+                }
+                
+            }
+
+            // move joints towards pole
+            for (int i = 1; i < numberOfJoints; i++) {
+                Plane plane = new Plane(_jointPositions[i + 1] - _jointPositions[i - 1], _jointPositions[i - 1]);
+                Vector3 projetedPole = plane.ClosestPointOnPlane(pole.position);
+                Vector3 projectedBone = plane.ClosestPointOnPlane(_jointPositions[i]);
+                float angle = Vector3.SignedAngle(projectedBone - _jointPositions[i - 1], projetedPole - _jointPositions[i - 1], plane.normal);
+                _jointPositions[i] = Quaternion.AngleAxis(angle, plane.normal) * ( _jointPositions[i] - _jointPositions[i - 1] ) + _jointPositions[i - 1];
             }
             
-            // move joints towards pole
-
+            
             // set joint positions
-            for (int i = 0; i < _positions.Length; i++) {
-                _bones[i].position = _positions[i];
+            for (int i = 0; i < _jointPositions.Length; i++) {
+                _joints[i].position = _jointPositions[i];
+                
+                if (i < numberOfJoints)
+                    _joints[i].LookAt(_joints[i + 1]);
+                
             }
 
         }
         
     }
-
+    
 }
