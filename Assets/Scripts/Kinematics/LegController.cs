@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace com.GE1Assignment.Kinematics {
@@ -6,30 +7,32 @@ namespace com.GE1Assignment.Kinematics {
     public class LegController : MonoBehaviour {
 
         public Transform target;
-        public float movementThreshold;
-        public float speed;
+        public float movementThreshold = 10;
+        public float speed = 1;
 
-        public bool enableMovement;
+        private Vector3 _previousPosition;
+        private Vector3 _anchorPoint;
+        
+        private void Start() {
+            CalculateAnchorPoint();
+        }
 
-        private void Update() {
-
-            if (( transform.position - target.position ).sqrMagnitude >= movementThreshold * movementThreshold) {
-                enableMovement = true;
-            }
-            else if (( transform.position - target.position ).sqrMagnitude >= 0.001f * 0.001f) {
-                enableMovement = false;
-            }
-
-            if (enableMovement) {
-                Step();
-            }
-
+        private void FixedUpdate() {
+            Step();
         }
 
         private void Step() {
             
-        }
+            if (( target.position - transform.position ).sqrMagnitude >= movementThreshold * movementThreshold) {
+                transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.fixedTime);
+            }
 
+        }
+ 
+        private void CalculateAnchorPoint() {
+            _anchorPoint = (target.position - transform.position) * 0.5f + transform.position;
+            _anchorPoint.y += 2;
+        }
 
     }
 
