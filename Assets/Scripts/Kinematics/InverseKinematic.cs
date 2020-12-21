@@ -105,8 +105,7 @@ namespace com.GE1Assignment.Kinematics {
                 float angle = Vector3.SignedAngle(projectedBone - _jointPositions[i - 1], projetedPole - _jointPositions[i - 1], plane.normal);
                 _jointPositions[i] = Quaternion.AngleAxis(angle, plane.normal) * ( _jointPositions[i] - _jointPositions[i - 1] ) + _jointPositions[i - 1];
             }
-            
-            
+
             // set joint positions
             for (int i = 0; i < _jointPositions.Length; i++) {
                 _joints[i].position = _jointPositions[i];
