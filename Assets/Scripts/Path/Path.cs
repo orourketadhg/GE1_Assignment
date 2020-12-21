@@ -36,6 +36,30 @@ namespace com.GE1Assignment.Path {
         public int NumPoints => ( points.Count );
     
         public int NumSegments => points.Count / 3;
+        public bool IsClosed {
+            get => isClosed;
+            set {
+                if (isClosed != value) {
+                    isClosed = value;
+                    
+                    if (isClosed) {
+                        points.Add(points[points.Count - 1] * 2 - points[points.Count - 2]);
+                        points.Add(points[0] * 2 - points[1]);
+                        if (autoSetControlPoints) {
+                            AutoSetAnchorControlPoints(0);
+                            AutoSetAnchorControlPoints(points.Count - 3);
+                        }
+                    }
+                    else {
+                        points.RemoveRange(points.Count - 2, 2);
+                        if (autoSetControlPoints) {
+                            AutoSetStartAndEndControls();
+                        }
+                    }
+                    
+                }
+            }
+        }
 
         public void AddSegment(Vector2 anchorPosition) {
             points.Add(points[points.Count - 1] * 2 - points[points.Count - 2]);
@@ -44,6 +68,38 @@ namespace com.GE1Assignment.Path {
 
             if (autoSetControlPoints) {
                 AutoSetAllAffectedControlPoints(points.Count - 1);
+            }
+        }
+
+        public void SplitSegment(Vector2 anchorPosition, int index) {
+            points.InsertRange(index*3+2, new Vector2[] {
+                Vector2.zero, anchorPosition, Vector2.zero
+            });
+
+            if (autoSetControlPoints) {
+                AutoSetAllAffectedControlPoints(index * 3 + 3);
+            }
+            else {
+                AutoSetAnchorControlPoints(index * 3 + 3);
+            }
+        }
+
+        public void DeleteSegment(int anchorIndex) {
+            if (NumSegments > 2 || !isClosed && NumSegments > 1) {
+
+                if (anchorIndex == 0) {
+                    if (isClosed) {
+                        points[points.Count - 1] = points[2];
+                    }
+
+                    points.RemoveRange(0, 3);
+                }
+                else if (anchorIndex == points.Count - 1 && !isClosed) {
+                    points.RemoveRange(anchorIndex - 2, 3);
+                }
+                else {
+                    points.RemoveRange(anchorIndex - 1, 3);
+                }
             }
         }
 
@@ -93,25 +149,6 @@ namespace com.GE1Assignment.Path {
                 
             }
 
-        }
-
-        public void ToggleClosed() {
-            isClosed = !isClosed;
-
-            if (isClosed) {
-                points.Add(points[points.Count - 1] * 2 - points[points.Count - 2]);
-                points.Add(points[0] * 2 - points[1]);
-                if (autoSetControlPoints) {
-                    AutoSetAnchorControlPoints(0);
-                    AutoSetAnchorControlPoints(points.Count - 3);
-                }
-            }
-            else {
-                points.RemoveRange(points.Count - 2, 2);
-                if (autoSetControlPoints) {
-                    AutoSetStartAndEndControls();
-                }
-            }
         }
 
         private void AutoSetAllAffectedControlPoints(int updatedAnchorIndex) {

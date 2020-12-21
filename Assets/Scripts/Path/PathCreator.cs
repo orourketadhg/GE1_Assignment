@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace com.GE1Assignment.Path {
 
@@ -8,6 +9,10 @@ namespace com.GE1Assignment.Path {
 
         public void CreatePath() {
             path = new Path(transform.position);
+        }
+
+        private void Reset() {
+            CreatePath();
         }
 
     }
