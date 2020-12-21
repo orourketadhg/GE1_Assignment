@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using com.GE1Assignment.Mathematics;
 using UnityEngine;
 
 namespace com.GE1Assignment.Path {
@@ -72,7 +73,7 @@ namespace com.GE1Assignment.Path {
         }
 
         public void SplitSegment(Vector2 anchorPosition, int index) {
-            points.InsertRange(index*3+2, new Vector2[] {
+            points.InsertRange(index*3+2, new[] {
                 Vector2.zero, anchorPosition, Vector2.zero
             });
 
@@ -104,7 +105,7 @@ namespace com.GE1Assignment.Path {
         }
 
         public Vector2[] GetPointsInSegment(int index) {
-            return new Vector2[] {points[index * 3], points[index * 3 + 1], points[index * 3 + 2], points[LoopIndex(index * 3 + 3)]};
+            return new[] {points[index * 3], points[index * 3 + 1], points[index * 3 + 2], points[LoopIndex(index * 3 + 3)]};
         }
 
         public void MovePoint(int index, Vector2 newPosition) {
@@ -151,6 +152,40 @@ namespace com.GE1Assignment.Path {
 
         }
 
+        public Vector2[] CalculateEvenlySpacedPoints(float spacing, float resolution = 1) {
+            var evenlySpacedPoints = new List<Vector2> {points[0]};
+            Vector2 previousPoint = points[0];
+            float dstSinceLastEvenPoint = 0;
+
+            for (int i = 0; i < NumSegments; i++) {
+                var p = GetPointsInSegment(i);
+                float controlNetLength = Vector2.Distance(p[0], p[1]) + Vector2.Distance(p[1], p[2]) + Vector2.Distance(p[2], p[3]);
+                float estCurveLength = Vector2.Distance(p[0], p[3]) + controlNetLength * 0.5f;
+                int numDivisions = Mathf.CeilToInt(estCurveLength * resolution * 10);
+                float t = 0;
+                
+                while (t <= 1) {
+                    t += 1f/numDivisions;
+                    Vector2 pointOnCurve = Bezier.Vector2CubicCurve(p[0], p[1], p[2], p[3], t);
+                    dstSinceLastEvenPoint += Vector2.Distance(previousPoint, pointOnCurve);
+
+                    while (dstSinceLastEvenPoint >= spacing) {
+                        float overshootDst = dstSinceLastEvenPoint - spacing;
+                        Vector2 newPoint = pointOnCurve + ( previousPoint - pointOnCurve ).normalized * overshootDst;
+                        evenlySpacedPoints.Add(newPoint);
+                        dstSinceLastEvenPoint = overshootDst;
+                        previousPoint = newPoint;
+                    }
+                    
+                    previousPoint = pointOnCurve;
+                    
+                }
+            }
+
+            return evenlySpacedPoints.ToArray();
+
+        }
+
         private void AutoSetAllAffectedControlPoints(int updatedAnchorIndex) {
             for (int i = updatedAnchorIndex - 3; i <= updatedAnchorIndex + 3; i += 3) {
                 if (i >= 0 && i < points.Count || isClosed) {
@@ -191,7 +226,7 @@ namespace com.GE1Assignment.Path {
             for (int i = 0; i < 2; i++) {
                 int controlIndex = anchorIndex + i * 2 - 1;
                 if (controlIndex >= 0 && controlIndex < points.Count || isClosed) {
-                    points[LoopIndex(controlIndex)] = anchorPos + dir * neighbourDistances[i] * 0.5f;
+                    points[LoopIndex(controlIndex)] = anchorPos + dir * (neighbourDistances[i] * 0.5f);
                 }
             }
 

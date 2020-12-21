@@ -43,7 +43,7 @@ namespace com.GE1Assignment.Kinematics {
                 float distanceCovered = ( Time.time - _startTime ) * stepSpeed;
                 float distanceToCoverThisFrame = distanceCovered / _movementDistance;
 
-                transform.position = Bezier.QuadraticCurve(_previousPosition, _anchorPoint, _futurePosition, distanceToCoverThisFrame);
+                transform.position = Bezier.Vector3QuadraticCurve(_previousPosition, _anchorPoint, _futurePosition, distanceToCoverThisFrame);
 
                 if (( _futurePosition - transform.position ).sqrMagnitude < 0.01f * 0.01f) {
                     transform.position = _futurePosition;

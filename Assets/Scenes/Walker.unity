@@ -807,6 +807,7 @@ GameObject:
   m_Component:
   - component: {fileID: 305584816}
   - component: {fileID: 305584815}
+  - component: {fileID: 305584817}
   m_Layer: 0
   m_Name: Path
   m_TagString: Untagged
@@ -828,11 +829,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path:
     points:
-    - {x: -1, y: 0}
-    - {x: -0.5, y: 0.5}
-    - {x: 0.5, y: -0.5}
-    - {x: 1, y: 0}
-    isClosed: 0
+    - {x: -3.1818748, y: 0.18040496}
+    - {x: -2.5589864, y: 0.51508427}
+    - {x: -3.39468, y: 1.7606258}
+    - {x: -2.3192642, y: 1.9673979}
+    - {x: -1.340102, y: 2.1556635}
+    - {x: 0.20958549, y: 0.7133908}
+    - {x: 0.85956573, y: 0.99182415}
+    - {x: 1.719431, y: 1.3601663}
+    - {x: 4.162863, y: -0.5620406}
+    - {x: 3.763338, y: -1.0870686}
+    - {x: 3.2735536, y: -1.7307078}
+    - {x: 2.3083043, y: -2.8228824}
+    - {x: 0.83175117, y: -2.7371826}
+    - {x: -0.036406577, y: -2.6867943}
+    - {x: -0.09527561, y: -1.6122298}
+    - {x: -0.8534715, y: -1.051959}
+    - {x: -1.3965325, y: -0.65066266}
+    - {x: -2.383797, y: -2.211227}
+    - {x: -3.0741036, y: -1.8243533}
+    - {x: -3.5414338, y: -1.5624442}
+    - {x: -3.8837502, y: -0.19671434}
+    isClosed: 1
     autoSetControlPoints: 0
 --- !u!4 &305584816
 Transform:
@@ -848,6 +866,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &305584817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305584814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: accf05319c2c4a4896c34e923199413c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spacing: 0.1
+  resolution: 1
 --- !u!1 &320183558
 GameObject:
   m_ObjectHideFlags: 0
