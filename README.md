@@ -21,18 +21,23 @@ This project shows a procedurally animated creature (Philip) walking, via Invers
   
 ### Editor Mode
   Path GameObject:  <br/>
-  [Right Click] - Move/Adjust Anchor/Control point <br/>
-  [Shift + Right Click] - Split Segment <br/>
+  [Left Click] - Move/Adjust Anchor/Control point <br/>
+  [Shift + Left Click] - Split Segment <br/>
+  [Right Click] - Delete Segment <br/>
 
 # How it works
 
 ### Procedural Animation for creature (Walking)
 
-The procedural creature (Philip) operates by having the legs walk under Inverse Kinematic motion. By having the Root joint act as a foot, and the leaf joint act as a sholder, each leg would act as would expect. Each leg also has a pole, this pole will pull all free moving joints towards it, allowing the legs to be always upright. For a leg to take a step, the foot (Root Joint) must exceed a certain threshold value, the foot will then calculate the position the foot will move to after the step is finished, and begin stepping. The foot follows a bezier curve to move from its previous position to its next step position. Each foot target uses physics raycasts to detect the ground, and follow it so that each foot will always rest on the ground. 
+The procedural creature (Philip) operates by having the legs walk under Inverse Kinematic motion. By having the Root joint act as a foot, and the leaf joint act as a sholder, each leg would act as would expect. Each leg also has a pole, this pole will pull all free moving joints towards it, allowing the legs to be always upright. For a leg to take a step, the foot (Root Joint) must exceed a certain threshold value, the foot will then calculate the position the foot will move to after the step is finished, and begin stepping. The foot follows a bezier curve to move from its previous position to its next step position. Each foot target uses physics raycasts to detect a ground layer, and follow it so that each foot will always rest on the ground. 
 
 ### Path
 
-The path
+The path is created in the editor before play mode is entered. Once the path has been created, and playmode entered, the path will be split up into evently spaced points, these evenly spaced points will be used to place extruded spheres to create a gound for the path. Each sphere will be given a mesh collider, for follow the extruded surface, and have its layer set to ground so the creature can find it.
+
+### Movment
+
+Once the path has been created, the points are copied and modified to create points that the bdy can move to over time. As the body moves to neach position it rotates towards the next position. 
 
 # References
 
