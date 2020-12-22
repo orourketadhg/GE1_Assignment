@@ -1,4 +1,4 @@
-# Project Title
+# Philips Infinite Adventure
 
 Name: Tadhg O'Rourke
 
@@ -8,21 +8,31 @@ Class Group: DT228
 
 # Description of the project
 
-This project shows a procedurally animated creature walking, via Inverse Kinematics, along a path created by a Bezier Curve Editor. This project will also showcase the use of Unity's (New) Input System to track user input.   
+This project shows a procedurally animated creature (Philip) walking, via Inverse Kinematics, along a path created by a Bezier Curve Editor. This project will also showcase the use of Unity's (New) Input System to track user input. 
+
+[![Philips Infinite Adventure](https://youtu.be/S32D5DwIEcc)]
 
 # Instructions for use
 
-## Play Mode:
+### Play Mode
   [spacebar] - Cycle to next camera position <br/>
   [W/S] - Increase/Decrease Walking speed <br/>
   [Up Arrow/Down Arrow] - Increase/Decrease Walking speed <br/>
   
-## Editor Mode:
-  ### Path GameObject
+### Editor Mode
+  Path GameObject:  <br/>
   [Right Click] - Move/Adjust Anchor/Control point <br/>
   [Shift + Right Click] - Split Segment <br/>
 
 # How it works
+
+### Procedural Animation for creature (Walking)
+
+The procedural creature (Philip) operates by having the legs walk under Inverse Kinematic motion. By having the Root joint act as a foot, and the leaf joint act as a sholder, each leg would act as would expect. Each leg also has a pole, this pole will pull all free moving joints towards it, allowing the legs to be always upright. For a leg to take a step, the foot (Root Joint) must exceed a certain threshold value, the foot will then calculate the position the foot will move to after the step is finished, and begin stepping. The foot follows a bezier curve to move from its previous position to its next step position. Each foot target uses physics raycasts to detect the ground, and follow it so that each foot will always rest on the ground. 
+
+### Path
+
+The path
 
 # References
 
