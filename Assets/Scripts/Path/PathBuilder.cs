@@ -9,24 +9,26 @@ namespace com.GE1Assignment.Path {
         public float spacing = 0.1f;
         public float resolution = 1;
 
-        private void Start() {
-            Vector2[] points = FindObjectOfType<PathCreator>().path.CalculateEvenlySpacedPoints(spacing, resolution);
+        [HideInInspector] public Vector2[] points;
 
-            foreach (var point in points) {
+        public int NumPoints => points.Length;
+
+        private void Awake() {
+            points = FindObjectOfType<PathCreator>().path.CalculateEvenlySpacedPoints(spacing, resolution);
+
+            for (int index = 0; index < points.Length; index++) {
                 GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                g.transform.position = point;
-                g.transform.localScale = new Vector3(0.3f, 0.2f, 0.1f);
+                points[index] *= 100;
+                g.transform.position = new Vector3(points[index].x, 0, points[index].y);
+                g.transform.localScale = new Vector3(30, 10, 30);
                 g.transform.parent = transform;
                 g.layer = 8;
-                
+
                 g.GetComponent<MeshRenderer>().material.color = UnityEngine.Random.ColorHSV();
                 g.AddComponent<MeshCollider>();
-                Destroy(GetComponent<SphereCollider>());
+                Destroy(g.GetComponent<SphereCollider>());
             }
             
-            transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
-            transform.localScale = new Vector3(100, 100, 100);
-
         }
     }
 
