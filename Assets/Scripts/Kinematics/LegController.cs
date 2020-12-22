@@ -28,7 +28,10 @@ namespace com.GE1Assignment.Kinematics {
 
         private void Step() {
             
+            // check distance to target
             if (( target.position - transform.position ).sqrMagnitude >= movementThreshold * movementThreshold && !_stepping) {
+                
+                // calculate stepping parameters
                 _previousPosition = transform.position;
                 _futurePosition = target.position;
                 CalculateAnchorPoint();
@@ -39,6 +42,7 @@ namespace com.GE1Assignment.Kinematics {
 
             }
 
+            // move leaf to position along a bezier curve
             if (_stepping) {
                 float distanceCovered = ( Time.time - _startTime ) * stepSpeed;
                 float distanceToCoverThisFrame = distanceCovered / _movementDistance;
@@ -54,6 +58,9 @@ namespace com.GE1Assignment.Kinematics {
 
         }
  
+        /**
+         * Calculate the center point of the bezier curve
+         */
         private void CalculateAnchorPoint() {
             _anchorPoint = (_futurePosition - _futurePosition) * 0.5f + _previousPosition;
             _anchorPoint.y += 2;

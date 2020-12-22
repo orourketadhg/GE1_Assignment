@@ -10,13 +10,14 @@ namespace com.GE1Assignment {
         public Vector2 speedControl; 
 
         private void Awake() {
+            // singleton
             if (Instance != null && Instance != this) {
                 Destroy(this);
                 return;
             }
-
             Instance = this;
 
+            // setup controls
             _controls = new Controls();
             
             _controls.Camera.SwitchCameraView.performed += ctx => CameraController.Instance.CycleCameraPosition();
@@ -26,6 +27,9 @@ namespace com.GE1Assignment {
 
         }
 
+        /**
+         * Enable controls
+         */
         private void OnEnable() {
             _controls.Enable();
         }

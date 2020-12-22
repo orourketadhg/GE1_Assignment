@@ -16,6 +16,7 @@ namespace com.GE1Assignment.Path {
         private void Awake() {
             points = FindObjectOfType<PathCreator>().path.CalculateEvenlySpacedPoints(spacing, resolution);
 
+            // Spawn spheres as path at evenly spaced points
             for (int index = 0; index < points.Length; index++) {
                 GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 points[index] *= 100;

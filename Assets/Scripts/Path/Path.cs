@@ -62,6 +62,9 @@ namespace com.GE1Assignment.Path {
             }
         }
 
+        /**
+         * Add a segment at a positiom
+         */
         public void AddSegment(Vector2 anchorPosition) {
             points.Add(points[points.Count - 1] * 2 - points[points.Count - 2]);
             points.Add((points[points.Count - 1] + anchorPosition) * 0.5f);
@@ -72,6 +75,9 @@ namespace com.GE1Assignment.Path {
             }
         }
 
+        /**
+         * Split two segments at a position
+         */
         public void SplitSegment(Vector2 anchorPosition, int index) {
             points.InsertRange(index*3+2, new[] {
                 Vector2.zero, anchorPosition, Vector2.zero
@@ -85,6 +91,9 @@ namespace com.GE1Assignment.Path {
             }
         }
 
+        /**
+         * Delete a segment by its index
+         */
         public void DeleteSegment(int anchorIndex) {
             if (NumSegments > 2 || !isClosed && NumSegments > 1) {
 
@@ -104,10 +113,16 @@ namespace com.GE1Assignment.Path {
             }
         }
 
+        /**
+         * Get the anchor and control points of a segment
+         */
         public Vector2[] GetPointsInSegment(int index) {
             return new[] {points[index * 3], points[index * 3 + 1], points[index * 3 + 2], points[LoopIndex(index * 3 + 3)]};
         }
 
+        /**
+         * Move a point on the path
+         */
         public void MovePoint(int index, Vector2 newPosition) {
 
             Vector2 deltaMove = newPosition - points[index];
@@ -152,6 +167,9 @@ namespace com.GE1Assignment.Path {
 
         }
 
+        /**
+         * Calculate evenly spaced points around the path
+         */
         public Vector2[] CalculateEvenlySpacedPoints(float spacing, float resolution = 1) {
             var evenlySpacedPoints = new List<Vector2> {points[0]};
             Vector2 previousPoint = points[0];
@@ -186,6 +204,9 @@ namespace com.GE1Assignment.Path {
 
         }
 
+        /**
+         * Update all affected points positions around a anchor point
+         */
         private void AutoSetAllAffectedControlPoints(int updatedAnchorIndex) {
             for (int i = updatedAnchorIndex - 3; i <= updatedAnchorIndex + 3; i += 3) {
                 if (i >= 0 && i < points.Count || isClosed) {
@@ -196,6 +217,9 @@ namespace com.GE1Assignment.Path {
             AutoSetAllControlPoints();
         }
 
+        /**
+         * Auto position points anchor points in path
+         */
         private void AutoSetAllControlPoints() {
             for (int i = 0; i < points.Count; i+= 3) {
                 AutoSetAnchorControlPoints(i);
@@ -204,17 +228,22 @@ namespace com.GE1Assignment.Path {
             AutoSetStartAndEndControls();
         }
 
+        /**
+         * Auto position all anchor points in path
+         */
         private void AutoSetAnchorControlPoints(int anchorIndex) {
             Vector2 anchorPos = points[anchorIndex];
             Vector2 dir = Vector2.zero;
             float[] neighbourDistances = new float[2];
 
+            // previous point
             if (anchorIndex - 3 >= 0 || isClosed) {
                 Vector2 offset = points[LoopIndex(anchorIndex - 3)] - anchorPos;
                 dir += offset.normalized;
                 neighbourDistances[0] = offset.magnitude;
             }
             
+            // adjust next point
             if (anchorIndex + 3 >= 0 || isClosed) {
                 Vector2 offset = points[LoopIndex(anchorIndex + 3)] - anchorPos;
                 dir -= offset.normalized;
@@ -223,6 +252,7 @@ namespace com.GE1Assignment.Path {
 
             dir.Normalize();
             
+            // correct distance 
             for (int i = 0; i < 2; i++) {
                 int controlIndex = anchorIndex + i * 2 - 1;
                 if (controlIndex >= 0 && controlIndex < points.Count || isClosed) {
@@ -232,13 +262,21 @@ namespace com.GE1Assignment.Path {
 
         }
 
+        /**
+         * Auto position start and end points of path
+         */
         private void AutoSetStartAndEndControls() {
-            if (!isClosed) {
-                points[1] = ( points[0] + points[2] ) * 0.5f;
-                points[points.Count - 2] = ( points[points.Count - 1] + points[points.Count - 3] ) * 0.5f;
+            if (isClosed) {
+                return;
             }
+
+            points[1] = ( points[0] + points[2] ) * 0.5f;
+            points[points.Count - 2] = ( points[points.Count - 1] + points[points.Count - 3] ) * 0.5f;
         }
 
+        /**
+         * get Index of point
+         */ 
         private int LoopIndex(int i) {
             return ( i + points.Count ) % points.Count;
         }
