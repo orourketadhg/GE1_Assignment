@@ -13,14 +13,14 @@ This project shows a procedurally animated creature walking, via Inverse Kinemat
 # Instructions for use
 
 ## Play Mode:
-  [spacebar] - Cycle to next camera position
-  [W/S] - Increase/Decrease Walking speed
-  [Up Arrow/Down Arrow] - Increase/Decrease Walking speed
+  [spacebar] - Cycle to next camera position <br/>
+  [W/S] - Increase/Decrease Walking speed <br/>
+  [Up Arrow/Down Arrow] - Increase/Decrease Walking speed <br/>
   
 ## Editor Mode:
   ### Path GameObject
-  [Right Click] - Move/Adjust Anchor/Control point
-  [Shift + Right Click] - Split Segment
+  [Right Click] - Move/Adjust Anchor/Control point <br/>
+  [Shift + Right Click] - Split Segment <br/>
 
 # How it works
 
