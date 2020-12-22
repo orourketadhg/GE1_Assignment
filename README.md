@@ -10,7 +10,7 @@ Class Group: DT228
 
 This project shows a procedurally animated creature (Philip) walking, via Inverse Kinematics, along a path created by a Bezier Curve Editor. This project will also showcase the use of Unity's (New) Input System to track user input. 
 
-[![Philips Infinite Adventure](https://youtu.be/S32D5DwIEcc)]
+[![Philips Infinite Adventure](http://i3.ytimg.com/vi/S32D5DwIEcc/hqdefault.jpg)](https://youtu.be/S32D5DwIEcc)]
 
 # Instructions for use
 
